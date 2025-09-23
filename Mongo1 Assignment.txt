@@ -1,7 +1,7 @@
 Mongo1 AssignmentMongoDB Assignment Questions
 
 Scenario 1: Library Management System 
-You are designing a MongoDB database to manage a library�s book inventory and borrowing 
+You are designing a MongoDB database to manage a librarys book inventory and borrowing 
 records. The database must store book details such as title, author, publication year, genre, 
 and availability.
 
@@ -56,3 +56,4 @@ db.books.find().sort({year:-1});
 
 9. Create an index on the `author` field . 
 db.books.createIndex({author:1});
+
