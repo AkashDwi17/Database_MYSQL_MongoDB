@@ -1,0 +1,58 @@
+Mongo1 AssignmentMongoDB Assignment Questions
+
+Scenario 1: Library Management System 
+You are designing a MongoDB database to manage a library�s book inventory and borrowing 
+records. The database must store book details such as title, author, publication year, genre, 
+and availability.
+
+______________________________________________________________________________________________________________________________________
+
+
+1. Create a database named `libraryDB` and a collection named `books`.
+
+use libraryDB;
+
+db.createCollection ("books");
+
+2. Insert at least 5 book documents with fields: title, author, year, genre (array), and 
+available (boolean). 
+
+db.books.insertMany ([
+             {title: "Spring", author: "Gosling", year:2025 ,availability: true, genere:["writing", "music", "direct"]},
+             {title: "microservices", author: "hirosima", year:1995 ,availability: true, genere:["writing", "music", "direct"]},
+             {title: "sql", author: "prithvi", year:1856 , availability: false, genere:["writing", "music", "direct"]},
+             {title: "mongoDB", author: "Akash", year:1995 , availability: true, genere:["writing", "music", "direct"]},
+             {title: "Java", author: "Raghu", year:1995 , availability: false, genere:["writing", "music", "direct"]},
+             {title: "hindi", author: "Raghu", year:2045 , availability: false, genere:["writing", "music", "direct"]},
+             {title: "english", author: "Raghu", year:2017 , availability: false, genere:["writing", "music", "direct"]},
+ ]);
+
+
+3. Write a query to find all books published after 2015.
+ 
+db.books.find({year: {$gt:2015}}) ;
+
+
+4. Retrieve only the `title` and `author` of books where `available` is true. 
+
+db.books.find
+(
+	{availability: true},
+	{title:1, author:1}
+);
+
+5. Update the availability of a specific book to false when it is borrowed. 
+
+db.books.updateOne ({title:"Spring", { $set:{availability: false}}});
+
+6. Delete books of a particular genre (e.g., 'Magazine'). 
+db.books.deleteOne({genere:music});
+
+7. Find books where genre contains 'Science' or 'writing' year is greater than 2020. 
+db.books.find ({$or:[{genre: 'Science'}, {genre: 'writing'}, {year: {$gt: 2020}}]});
+
+8. Sort the books by publication year in descending order. 
+db.books.find().sort({year:-1});
+
+9. Create an index on the `author` field . 
+db.books.createIndex({author:1});
