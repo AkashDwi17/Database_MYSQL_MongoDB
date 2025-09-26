@@ -1,0 +1,163 @@
+-- Database
+CREATE DATABASE practiceDB;
+USE practiceDB;
+
+																			     -- 1. Employees Table
+CREATE TABLE employees (
+    emp_id INT AUTO_INCREMENT PRIMARY KEY,
+    emp_name VARCHAR(50),
+    department VARCHAR(50),
+    salary DECIMAL(10,2)
+);
+
+INSERT INTO employees (emp_name, department, salary) VALUES
+('Alice', 'HR', 45000),
+('Bob', 'IT', 60000),
+('Charlie', 'Finance', 52000),
+('David', 'IT', 70000),
+('Eva', 'HR', 48000);
+
+                                                                                   -- 2. Students Table
+CREATE TABLE students (
+    stu_id INT AUTO_INCREMENT PRIMARY KEY,
+    stu_name VARCHAR(50),
+    marks INT
+);
+
+INSERT INTO students (stu_name, marks) VALUES
+('Ravi', 85),
+('Sneha', 45),
+('Arjun', 72),
+('Meena', 33),
+('Kiran', 90);
+
+																				  -- 3. Products Table
+CREATE TABLE products (
+    prod_id INT AUTO_INCREMENT PRIMARY KEY,
+    prod_name VARCHAR(50),
+    price DECIMAL(10,2),
+    stock INT
+);
+
+INSERT INTO products (prod_name, price, stock) VALUES
+('Laptop', 55000, 12),
+('Mobile', 15000, 30),
+('Tablet', 22000, 15),
+('Headphones', 2000, 50),
+('Smartwatch', 7000, 25);
+
+
+select * from employees;
+select * from students;
+select * from products;
+
+-- 1 Employee Salary Check Input: Employee ID (IN) → Show employee name and salary. (Uses employees table)
+
+
+drop procedure priEmpName //
+delimiter //
+create procedure priEmName1(in id int)
+begin
+	declare info int;
+    declare info1 varchar (30);
+	select emp_name, salary into info1, info from employees where emp_id=id;
+    select info1, info;
+end //
+call priEmName1(1)//
+
+-- Factorial Calculation Input: Number (IN) → Print factorial. (Doesn’t need table)
+delimiter //
+create procedure calcFact (in n int)
+begin
+	declare nm1 int default 1;
+    declare fact int default 1;
+    while  nm1 <= n do set fact =  fact * nm1; 
+    set nm1 = nm1+1;
+    end while ;
+    select fact;
+end //
+
+call calcFact (5);
+
+-- Student Result Input: Student ID (IN) → Show Pass/Fail (marks ≥ 40 is Pass). (Uses students table)
+delimiter //
+create procedure passOrrFl(in id int)
+begin
+	declare num int default 0;
+	select marks into num from students where stu_id = id;
+	select if (num <=40, 'fail', 'pass');
+end //
+
+call passOrrFl (1);
+
+-- --------------------------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------------------------
+
+
+-- Find Highest Marks Output: Max marks from students (OUT). (Uses students table)
+delimiter //
+create procedure highestMark(out smarks int)
+begin
+	Select max(marks) into smarks from students ;
+end //
+call highestMark(@anyname);
+select @anyname;
+
+-- Count Employees in Department Input: Department (IN), Output: Count (OUT). (Uses employees table)
+delimiter //
+create procedure countEmp(in dname varchar(30), out dCount int)
+begin
+	Select count(emp_id) into dCount from employees where department = dname;
+end //
+
+call countEmp ('HR', @ANY);
+SELECT @ANY;
+
+
+-- Average Salary Output: Avg salary (OUT). (Uses employees table)
+delimiter //
+create procedure avegSal (out sal int)
+begin
+	select avg(salary) into sal from Employees ;
+end //
+
+call avegSal(@Akash);
+
+select @Akash;
+
+-- --------------------------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------------------------
+
+-- Increment Salary Input: Salary (INOUT) → Increase by 10%. (Uses employees table for realistic testing)
+delimiter // 
+create procedure incrementSall (inout incSal int)
+begin
+	declare total int;
+	select salary into incSal from employees where emp_id = incSal;
+    set incSal = incSal * 1.1;
+end //
+set @type = 1;
+call incrementSall (@type);
+select @type;
+
+-- Square a Number Input: Number (INOUT) → Replace with its square. (No table needed)
+
+delimiter //
+create procedure prSquare(inout n int)
+begin
+    set n = n*n;
+end //
+set @pk = 5;
+call prSquare(@pk);
+select @pk;
+
+-- Append Suffix to Product Name Input: Product name (INOUT) → Append "_DONE". (Uses products table)
+delimiter //
+create procedure addSufff(inout example varchar (50))
+begin
+	select concat(example, '_DONE') into example from products where prod_name = example
+    group by prod_name;
+end //
+set @sk = 'Mobile';
+call addSufff(@sk);
+select @sk;
