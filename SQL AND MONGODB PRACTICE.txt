@@ -1,0 +1,123 @@
+-- 1. Create Tables and Insert Data
+CREATE DATABASE dbda;
+USE dbda;
+
+CREATE TABLE Book(
+    Book_ID VARCHAR(10) PRIMARY KEY,
+    TITLE VARCHAR(30),
+    MRP INT,
+    PUBLISHER VARCHAR(50)
+);
+
+INSERT INTO Book (Book_ID, TITLE, MRP, PUBLISHER) VALUES
+('B10', 'SECRET', 399, 'SCROLL'),
+('B20', 'LANDMARK', 799, 'PAPERPOST'),
+('B30', 'VISION', 750, 'INDIAINK'),
+('B40', '2STATES', NULL, 'PAPERPOST'),
+('B50', 'CODE', 550, 'INDIAINK');
+
+CREATE TABLE Author(
+    A_ID VARCHAR(30) PRIMARY KEY,
+    NAME VARCHAR(30),
+    GENDER VARCHAR(10) CHECK (GENDER IN ('Male','Female')),
+    NATIONALITY VARCHAR(50),
+    BookID VARCHAR(10),
+    FOREIGN KEY (BookID) REFERENCES Book(Book_ID)
+);
+
+INSERT INTO Author VALUES
+('A10', 'CHETAN', 'Male', 'INDIAN', 'B50'),
+('A20', 'DANNY', 'Male', 'AMERICAN', 'B10'),
+('A30', 'ROBIN', 'Male', 'CANADIAN', 'B10'),
+('A40', 'ARUNDHATI', 'Female', 'INDIAN', 'B30');
+
+
+-- 2. List book details in descending order of MRP
+SELECT Book_ID, TITLE, MRP, PUBLISHER 
+FROM Book ORDER BY MRP DESC;
+
+-- 3. Find book titles starting with 'V'
+SELECT TITLE FROM Book WHERE TITLE LIKE 'V%';
+
+-- 4. Find total number of books
+SELECT COUNT(*) AS TotalBooks FROM Book;
+
+-- 5. List unique publishers
+SELECT DISTINCT PUBLISHER FROM Book;
+
+-- 6. Total books belonging to publisher 'INDIAINK' or 'SCROLL'
+SELECT COUNT(*) FROM Book 
+WHERE PUBLISHER IN ('INDIAINK','SCROLL');
+
+-- 7. Authors whose name contains 'an' or ends with 'in'
+SELECT A_ID, NAME 
+FROM Author 
+WHERE NAME LIKE '%an%' OR NAME LIKE '%in';
+
+-- 8. All details of INDIAN and AMERICAN male authors
+SELECT * FROM Author 
+WHERE NATIONALITY IN ('INDIAN','AMERICAN') 
+  AND GENDER='Male';
+
+-- 9. Max pricing of each publisher
+SELECT PUBLISHER, MAX(MRP) AS MaxPrice 
+FROM Book GROUP BY PUBLISHER;
+
+-- 10. List publisher and number of books published
+SELECT PUBLISHER, COUNT(Book_ID) AS NumBooks 
+FROM Book GROUP BY PUBLISHER;
+
+-- 11. Publisher, rounded avg price, and number of books (avg > 500)
+SELECT PUBLISHER, ROUND(AVG(MRP)) AS AvgPrice, COUNT(Book_ID) AS NumBooks
+FROM Book 
+GROUP BY PUBLISHER 
+HAVING AvgPrice > 500;
+
+-- 12. Nationality of authors where total >= 2
+SELECT NATIONALITY, COUNT(A_ID) AS TotalAuthors 
+FROM Author 
+GROUP BY NATIONALITY 
+HAVING COUNT(A_ID) >= 2;
+
+-- 13. Maximum of average prices among publishers
+SELECT MAX(AvgPrice) 
+FROM (SELECT AVG(MRP) AS AvgPrice FROM Book GROUP BY PUBLISHER) AS sub;
+
+-- 14. Display details of authors and their books
+SELECT a.A_ID, a.NAME, a.GENDER, a.NATIONALITY, b.Book_ID, b.TITLE, b.MRP, b.PUBLISHER
+FROM Author a 
+JOIN Book b ON a.BookID = b.Book_ID;
+
+-- 15. Books having MRP more than 'CODE'
+SELECT * FROM Book 
+WHERE MRP > (SELECT MRP FROM Book WHERE TITLE='CODE');
+
+-- 16. Authors who have not written any book
+SELECT * FROM Author 
+WHERE BookID IS NULL;
+
+
+======================================================================================================================================
+
+
+
+-- 17. Create collection and insert documents
+use company;
+
+db.company.insertMany([
+  { Name:"Andrew", Company:"qcash", Type:"Client" },
+  { Name:"David", Company:"newage", Type:"Potential" },
+  { Name:"Jason", Company:"tetra", Type:"Customer" },
+  { Name:"Mark", Company:"", Type:"Client" },
+  { Name:"Marwin", Company:"qcash", Type:"Potential" },
+  { Name:"Daniel", Company:"newage", Type:"" }
+]);
+
+-- 18. Display all documents
+db.company.find().pretty();
+
+-- 19. Display documents from 2 to 4
+db.company.find().skip(1).limit(3).pretty();
+
+-- 20. Remove a document
+db.company.deleteOne({ Name:"Mark" });
