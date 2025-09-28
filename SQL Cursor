@@ -1,0 +1,116 @@
+
+-- ----------------------------------------------------
+-- DATABASE & TABLE CREATION
+-- ----------------------------------------------------
+DROP DATABASE IF EXISTS cursorPractice;
+CREATE DATABASE cursorPractice;
+USE cursorPractice;
+
+-- ----------------------------------------------------
+-- PRODUCTS TABLE
+-- ----------------------------------------------------
+CREATE TABLE products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_name VARCHAR(50),
+    price DECIMAL(10,2),
+    stock INT
+);
+
+-- Insert sample data
+INSERT INTO products (product_name, price, stock) VALUES
+('Laptop', 55000, 10),
+('Mouse', 500, 200),
+('Keyboard', 1200, 150),
+('Monitor', 8000, 50),
+('Printer', 6500, 30);
+
+-- ----------------------------------------------------
+-- PROCEDURE 1: List all products with discount logic
+-- ----------------------------------------------------
+drop procedure listProduct // 
+delimiter //
+create procedure listProduct()
+begin	
+	declare pid int;
+    declare pname varchar(30);
+    declare pprice decimal(10,2);
+    declare pstock int;
+    declare disPrice decimal(10,2);
+    
+    declare done int default 0;
+    
+    
+    -- cursor
+    declare c1 cursor for select product_id, product_name, price, stock from products;
+    
+    -- handler
+    declare continue handler for not found set done = 1;
+    
+    -- open cursor
+    open c1;
+		print_product:loop
+			fetch c1 into pid, pname, pprice, pstock;
+            if done = 1 then
+				leave print_product;
+			end if;
+            
+            if pprice > 10000 then
+				set pprice = pprice*0.02;
+			else
+				set pprice = pprice*0.01;
+			end if;
+            
+            select pid as Product_Id, pname as Product_Name, pprice as Product_Price, pstock as Product_Stock, disprice as After_Dis;
+        end loop;
+    
+    close c1;
+    
+    
+end //
+
+call listProduct ();
+-- ----------------------------------------------------
+
+-- ----------------------------------------------------
+-- PROCEDURE 2: Fetch price of a given product by name
+-- ----------------------------------------------------
+
+
+delimiter //
+create procedure printProductPrice(in name varchar (50))
+begin
+	declare pid int;
+    declare pname varchar(30);
+    declare pprice decimal(10,2);
+    declare pstock int;
+	declare done int default 0;
+    
+    -- cursor
+    declare c1 cursor for select product_id, product_name, price, stock 
+		from products
+        where product_name = name;
+    
+    -- handler
+    declare continue handler for not found set done = 1;
+     
+     -- open cursor
+     Open c1;
+		printInfo: loop
+			fetch c1 into pid, pname, pprice, pstock;
+            if done = 1 then 
+				leave printInfo;
+            end if;
+            
+            select pid as Product_Id, pname as Product_Name, pprice as Product_Price, pstock as Product_Stock;
+
+        end loop;
+     close c1;
+end //
+
+call printProductPrice ('Monitor');
+
+
+
+
+
+
