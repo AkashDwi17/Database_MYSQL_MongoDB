@@ -1,35 +1,46 @@
 -- 1. Create Tables and Insert Data
-CREATE DATABASE dbda;
+
 USE dbda;
 
-CREATE TABLE Book(
-    Book_ID VARCHAR(10) PRIMARY KEY,
-    TITLE VARCHAR(30),
-    MRP INT,
-    PUBLISHER VARCHAR(50)
+-- DROP database dbda;
+
+create table Book(
+	Book_ID VARCHAR (10),
+	TITLE VARCHAR (30),
+	MRP INT,
+	PUBLISHER VARCHAR(50)
 );
 
-INSERT INTO Book (Book_ID, TITLE, MRP, PUBLISHER) VALUES
+-- describe Book;
+
+INSERT INTO Book 
+(Book_ID, TITLE, MRP, PUBLISHER)
+VALUES
 ('B10', 'SECRET', 399, 'SCROLL'),
 ('B20', 'LANDMARK', 799, 'PAPERPOST'),
 ('B30', 'VISION', 750, 'INDIAINK'),
 ('B40', '2STATES', NULL, 'PAPERPOST'),
 ('B50', 'CODE', 550, 'INDIAINK');
 
-CREATE TABLE Author(
-    A_ID VARCHAR(30) PRIMARY KEY,
-    NAME VARCHAR(30),
-    GENDER VARCHAR(10) CHECK (GENDER IN ('Male','Female')),
-    NATIONALITY VARCHAR(50),
-    BookID VARCHAR(10),
-    FOREIGN KEY (BookID) REFERENCES Book(Book_ID)
+CREATE TABLE AUTHOR(
+	A_ID VARCHAR (30),
+    NAME VARCHAR (30),
+    GENDER VARCHAR (30) CHECK (GENDER IN ('MALE', 'FEMALE')),
+    NATIONALITY VARCHAR (50),
+    bookid VARCHAR (50)
 );
+    
+INSERT INTO AUTHOR 
+(A_ID, NAME, GENDER, NATIONALITY, bookid)
+values
+('A10', 'CHETAN', 'Male', 'INDIAN', 'b50'),
+('A20', 'DANNY', 'Male', 'AMERICAN', 'b10'),
+('A30', 'ROBIN', 'Male', 'CANADIAN', 'b10'),
+('A40', 'ARUNDHATI', 'female', 'INDIAN', 'b30');
 
-INSERT INTO Author VALUES
-('A10', 'CHETAN', 'Male', 'INDIAN', 'B50'),
-('A20', 'DANNY', 'Male', 'AMERICAN', 'B10'),
-('A30', 'ROBIN', 'Male', 'CANADIAN', 'B10'),
-('A40', 'ARUNDHATI', 'Female', 'INDIAN', 'B30');
+ALTER TABLE  AUTHOR ADD PRIMARY KEY (A_ID);
+ALTER TABLE  Book ADD PRIMARY KEY (BOOK_ID);
+ALTER TABLE AUTHOR ADD FOREIGN KEY (bookid) references Book (Book_ID);
 
 
 -- 2. List book details in descending order of MRP
@@ -121,3 +132,4 @@ db.company.find().skip(1).limit(3).pretty();
 
 -- 20. Remove a document
 db.company.deleteOne({ Name:"Mark" });
+
