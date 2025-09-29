@@ -1,0 +1,28 @@
+🔹 4. SQL Examples
+Example 1: BEFORE INSERT Trigger
+CREATE TRIGGER before_employee_insert
+BEFORE INSERT ON Employees
+FOR EACH ROW
+BEGIN
+    IF NEW.salary < 1000 THEN
+        SET NEW.salary = 1000; -- Minimum salary validation
+    END IF;
+END;
+
+Example 2: AFTER UPDATE Trigger (Audit)
+CREATE TRIGGER after_employee_update
+AFTER UPDATE ON Employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO Employee_Audit(emp_id, old_salary, new_salary, updated_at)
+    VALUES (OLD.emp_id, OLD.salary, NEW.salary, NOW());
+END;
+
+Example 3: DELETE Trigger
+CREATE TRIGGER before_employee_delete
+BEFORE DELETE ON Employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO Deleted_Employees(emp_id, emp_name, deleted_at)
+    VALUES (OLD.emp_id, OLD.emp_name, NOW());
+END;
