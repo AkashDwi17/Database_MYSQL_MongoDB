@@ -1,0 +1,92 @@
+1. use Akash;
+
+2. create collection ("user");
+
+3. db.user.insertOne({name:'akd', marks:45});
+
+4.db.user.insertMany
+([
+	{name:'a', marks:55},
+	{name:'b', marks:74},
+	{name:'c', marks:95}
+]);
+
+5. show dbs;
+
+6. db.user.updateOne
+   ({name: 'anno'}, {$set: {name:'prithvi', school:'gvm'}});
+
+7. db.user.find();
+
+8. Comparison
+The following operators can be used in queries to compare values:
+
+$eq: Values are equal
+$ne: Values are not equal
+$gt: Value is greater than another value
+$gte: Value is greater than or equal to another value
+$lt: Value is less than another value
+$lte: Value is less than or equal to another value
+$in: Value is matched within an array
+
+===================================================================
+
+9. Logical
+The following operators can logically compare multiple queries.
+
+$and: Returns documents where both queries match
+$or: Returns documents where either query matches
+$nor: Returns documents where both queries fail to match
+$not: Returns documents where the query does not match
+
+===================================================================
+
+10. The following operators assist in evaluating documents.
+
+$regex: Allows the use of regular expressions when evaluating field values
+$text: Performs a text search
+$where: Uses a JavaScript expression to match documents
+
+===================================================================
+
+11. MongoDB Update Operators
+There are many update operators that can be used during document updates.
+
+Fields
+The following operators can be used to update fields:
+
+$currentDate: Sets the field value to the current date
+$inc: Increments the field value
+$rename: Renames the field
+$set: Sets the value of a field
+$unset: Removes the field from the document
+
+===================================================================
+
+
+12. Array
+The following operators assist with updating arrays.
+
+$addToSet: Adds distinct elements to an array
+$pop: Removes the first or last element of an array
+$pull: Removes all elements from an array that match the query
+$push: Adds an element to an array
+
+===================================================================
+
+13. db.movies.aggregate([ { $limit: 1 } ])
+
+14. sort
+db.collection.find(query).sort({ field: order });
+
+db.employees.find().sort({ dept_id: 1, salary: -1 })
+
+db.employees.find({}, { emp_name: 1, salary: 1, _id: 0 }).sort({ salary: -1 })
+
+
+15. count
+
+db.employees.find().sort({ salary: -1 }).limit(3)
+
+
+
